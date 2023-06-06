@@ -109,7 +109,7 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser('JW300 corpus downloader and pre-processor for translations from english.')
   parser.add_argument('trgs', nargs='+', help='Target languages.')
   parser.add_argument('--output_dir', help='Output directory for corpus.', default='jw300')
-  parser.add_argument('--lc', action='store_true', help='Lowercase the data.')  
+  parser.add_argument('--lc', action='store_true', help='Lowercase the data.')
   parser.add_argument('--seed', type=int, help='Random seed for corpus shuffling.', default=42)
   parser.add_argument('--bpe_size', type=int, help='Number of BPE subwords.', default=10000)
   parser.add_argument('--dev_size', type=int, help='Size of the development set.', default=1000)
@@ -118,24 +118,26 @@ if __name__ == "__main__":
   src="en"
   if not os.path.isdir(args.output_dir):
     os.makedirs(args.output_dir)
-  langfile = open("{}/langs.txt".format(args.output_dir), "a")
+  langfile = open(f"{args.output_dir}/langs.txt", "a")
 
   # first load global test sentences to filter
   # store english portion in set for quick filtering checks
   en_test_sents = set()
-  filter_test_sents = "{}/test.en-any.en".format(args.test_dir)
+  filter_test_sents = f"{args.test_dir}/test.en-any.en"
   j = 0
   with open(filter_test_sents) as f:
     for line in f:
       en_test_sents.add(line.strip())
       j += 1
-  print('Loaded {} global test sentences to filter from the training/dev data.'.format(j))
+  print(
+      f'Loaded {j} global test sentences to filter from the training/dev data.'
+  )
 
   for i, trg in enumerate(args.trgs):
-    print('Creating corpus for {}-{} ({}/{}).'.format(src, trg, i+1, len(args.trgs)))
+    print(f'Creating corpus for {src}-{trg} ({i + 1}/{len(args.trgs)}).')
  #   try:
     create_corpus(src, trg, en_test_sents, args.output_dir, args.lc, args.seed, args.bpe_size, args.dev_size, args.test_dir)
-    langfile.write("{}\n".format(trg))
+    langfile.write(f"{trg}\n")
 #    except:
 #      print('Could not process {}.'.format(trg))
 #      continue
